@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--新闻中心的url  -->
+    <string name="newscenterurl"> http://10.0.2.2:8080/zhbj/categories.json</string>
+	<string name="baseurl">http://10.0.2.2:8080/zhbj/</string>
+
+</resources>

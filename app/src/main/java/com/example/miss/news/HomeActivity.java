@@ -5,17 +5,25 @@ import android.os.Bundle;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-
 /**
- * Home界面
- * Created by Miss on 2015/10/14.
+ * Created by Miss on 2015/10/12.
  */
 public class HomeActivity extends SlidingFragmentActivity {
+
+    private static final String LEFT_FRAGMENT = "left_fragment";
+    private static final String MAIN_FRAGMENT = "main_fragment";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+
+        initData();
     }
+
+    private void initData() {
+    }
+
 
     private void initView() {
         /**左侧菜单布局*/
@@ -32,7 +40,6 @@ public class HomeActivity extends SlidingFragmentActivity {
 
         /**.setMode(SlidingMenu.LEFT_RIGHT);*/
         slidingMenu.setMode(SlidingMenu.LEFT);
-
 
     }
 }
