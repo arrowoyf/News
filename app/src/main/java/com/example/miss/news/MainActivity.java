@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash);
 
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
