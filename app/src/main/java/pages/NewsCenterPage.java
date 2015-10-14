@@ -2,28 +2,112 @@ package pages;
 
 import android.view.Gravity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.miss.news.HomeActivity;
+import com.example.miss.news.R;
+import com.google.gson.Gson;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import domain.NewsCenterData;
+import utils.PrintLog;
 
 
 public class NewsCenterPage extends BasePage {
 
-	public NewsCenterPage(HomeActivity context) {
-		super(context);
-	}
+    private NewsCenterData newsCenterData;
 
-	@Override
-	public void initData() {
-		tv_title.setText("新闻中心");
+    public NewsCenterPage(HomeActivity context) {
+        super(context);
+    }
 
-		// 内容
-		TextView tv = new TextView(mContext);
-		tv.setText("新闻中心的内容");
-		tv.setTextSize(30);
-		tv.setGravity(Gravity.CENTER);
+    @Override
+    public void initData() {
+        tv_title.setText("新闻中心");
 
-		// 添加到内容中frameLayout
-		fl_content.addView(tv);
-	}
+        // 内容
+        TextView tv = new TextView(mContext);
+        tv.setText("新闻中心的内容");
+        tv.setTextSize(30);
+        tv.setGravity(Gravity.CENTER);
+
+        // 添加到内容中frameLayout
+        fl_content.addView(tv);
+
+
+        /**从服务器获取数据*/
+        String url = mContext.getResources().getString(R.string.newscenterurl);
+        /**1：请求 url*/
+        getDataForNet(url);
+
+
+    }
+
+    /**
+     * 从服务器获取数据
+     *
+     * @param url
+     */
+    private void getDataForNet(String url) {
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+            @Override
+            public void onSuccess(ResponseInfo<String> responseInfo) {
+
+                PrintLog.showLog("请求数据成功");
+
+
+                /**请求成功*/
+
+                /**2：获取 json 数据*/
+                String jsonDataStr = responseInfo.result;
+                /**3：解析 json 数据*/
+                newsCenterData = parseJsonData(jsonDataStr);
+                /**4：处理事件*/
+                processData(newsCenterData);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                /**请求失败*/
+                Toast.makeText(mContext, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 处理数据
+     *
+     * @param newsCenterData
+     */
+    private void processData(NewsCenterData newsCenterData) {
+
+        PrintLog.showLog(newsCenterData.getData().get(0).getChildren().get(0).getTitle());
+
+        /**设置左侧菜单数据*/
+
+        /**设置四个新闻界面*/
+
+        /**显示数据*/
+
+
+    }
+
+    /**
+     * 解析 json 数据
+     *
+     * @param jsonDataStr
+     */
+    private NewsCenterData parseJsonData(String jsonDataStr) {
+        Gson gson = new Gson();
+        /**1,创建 class*/
+        NewsCenterData newsCenterData = gson.fromJson(jsonDataStr, NewsCenterData.class);
+
+        return newsCenterData;
+    }
 
 }

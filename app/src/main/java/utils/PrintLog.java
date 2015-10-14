@@ -9,16 +9,13 @@ import android.util.Log;
 public class PrintLog {
 
 
-    private static boolean isFlag;
+    private static boolean isTrue = true;
+
 
     public static void showLog(String str) {
 
-        if (isFlag) {
-
-            Log.d("--->", str);
-
-        } else {
-
+        if (isTrue) {
+            Log.d("TAG", str);
         }
     }
 }
