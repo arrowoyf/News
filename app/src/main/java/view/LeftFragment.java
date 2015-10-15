@@ -58,6 +58,34 @@ public class LeftFragment extends BaseFragment {
     }
 
     /**
+     * ②：
+     * 获取这个接口，定义接口类型的成员变量
+     */
+    private OnLeftMenuPageChangeListener mOnLeftMenuPageChangeListener;
+
+    /**
+     * ③：
+     * 定义方法，实现桥的操作
+     *
+     * @param listener
+     */
+    public void setOnLeftMenuPageChangeListener(OnLeftMenuPageChangeListener listener) {
+        this.mOnLeftMenuPageChangeListener = listener;
+    }
+
+    /**
+     * ①：
+     * 组件间直接通讯
+     * 监听器接口
+     * 哪个按钮被选择
+     * 将选中的页面暴露出来
+     */
+    public interface OnLeftMenuPageChangeListener {
+        void selectPage(int selectIndex);
+    }
+
+
+    /**
      * 设置 tv 的选中状态
      */
     @Override
@@ -74,9 +102,23 @@ public class LeftFragment extends BaseFragment {
 
                 /**让新闻中心界面，显示数据：新闻 组图 互动 专题 的一个*/
 
-                /**获取到上下文,左侧菜单是通用，类型不可以是 NewsCenterPage*/
-                BasePage page = mContext.getMainFragment().getSelectPage();
-                page.selectPage(selectIndex);
+                /**先判断是否有桥，监听事件 ！= null,覆盖，回调，*/
+                if (mOnLeftMenuPageChangeListener != null) {
+                    /**实现接口，用接口的回调*/
+                    mOnLeftMenuPageChangeListener.selectPage(selectIndex);
+                } else {
+                    /**如果没实现接口，用此方法
+                     *
+                     * 选择页面
+                     * 获取到上下文,左侧菜单是通用，类型不可以是 NewsCenterPage
+                     */
+                    BasePage page = mContext.getMainFragment().getSelectPage();
+                    page.selectPage(selectIndex);
+                }
+
+
+//                BasePage page = mContext.getMainFragment().getSelectPage();
+//                page.selectPage(selectIndex);
 
                 /**关闭左侧菜单*/
                 mContext.getSlidingMenu().toggle();

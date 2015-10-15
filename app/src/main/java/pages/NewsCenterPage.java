@@ -26,6 +26,8 @@ public class NewsCenterPage extends BasePage {
         super(context);
     }
 
+
+
     /**设置显示新闻条目对应的uemian
      * @param pageIndex 新闻 专题 。。。
      * 关联：点击事件
@@ -110,6 +112,15 @@ public class NewsCenterPage extends BasePage {
         /**获取*/
         LeftFragment leftFragment = mContext.getLeftFragment();
         leftFragment.setLeftMenuData(newsCenterData.getData());
+
+        leftFragment.setOnLeftMenuPageChangeListener(new LeftFragment.OnLeftMenuPageChangeListener() {
+            @Override
+            public void selectPage(int selectIndex) {
+                PrintLog.showLog("桥：页面"+selectIndex+"的显示");
+
+            }
+        });
+
         /**设置四个新闻界面*/
 
         /**显示数据*/
