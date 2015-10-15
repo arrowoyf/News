@@ -26,6 +26,19 @@ public class NewsCenterPage extends BasePage {
         super(context);
     }
 
+    /**设置显示新闻条目对应的uemian
+     * @param pageIndex 新闻 专题 。。。
+     * 关联：点击事件
+     */
+    @Override
+    public void selectPage(int pageIndex) {
+        /***/
+        PrintLog.showLog("页面"+pageIndex+"的显示");
+
+    }
+
+
+
     @Override
     public void initData() {
         tv_title.setText("新闻中心");
@@ -51,7 +64,7 @@ public class NewsCenterPage extends BasePage {
     /**
      * 从服务器获取数据
      *
-     * @param url
+     * @param url 地址
      */
     private void getDataForNet(String url) {
         HttpUtils httpUtils = new HttpUtils();
@@ -83,7 +96,7 @@ public class NewsCenterPage extends BasePage {
     /**
      * 处理数据
      *
-     * @param newsCenterData
+     * @param newsCenterData json 数据
      */
     private void processData(NewsCenterData newsCenterData) {
 
@@ -107,7 +120,7 @@ public class NewsCenterPage extends BasePage {
     /**
      * 解析 json 数据
      *
-     * @param jsonDataStr
+     * @param jsonDataStr json数据的解析
      */
     private NewsCenterData parseJsonData(String jsonDataStr) {
         Gson gson = new Gson();

@@ -77,6 +77,11 @@ public class MainFragment extends BaseFragment {
         }
     }
 
+    /**获取选中的页面*/
+    public BasePage getSelectPage() {
+        return pages.get(selectIndex);
+    }
+
     @Override
     public void initData() {
         /**默认选中的rb*/
@@ -96,6 +101,9 @@ public class MainFragment extends BaseFragment {
         super.initData();
     }
 
+    /**
+     * 条目
+     */
     private int selectIndex = 0;
 
 

@@ -14,6 +14,7 @@ import com.example.miss.news.R;
 import java.util.List;
 
 import domain.NewsCenterData;
+import pages.BasePage;
 import utils.PrintLog;
 
 /**
@@ -70,11 +71,25 @@ public class LeftFragment extends BaseFragment {
 
                 /**通知界面*/
                 mAdpter.notifyDataSetChanged();
+
+                /**让新闻中心界面，显示数据：新闻 组图 互动 专题 的一个*/
+
+                /**获取到上下文,左侧菜单是通用，类型不可以是 NewsCenterPage*/
+                BasePage page = mContext.getMainFragment().getSelectPage();
+                page.selectPage(selectIndex);
+
+                /**关闭左侧菜单*/
+                mContext.getSlidingMenu().toggle();
+
+
             }
         });
         super.initEvent();
     }
 
+    /**
+     * 设配器
+     */
     private class MyAdpter extends BaseAdapter {
 
         @Override
@@ -103,7 +118,7 @@ public class LeftFragment extends BaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = View.inflate(mContext, R.layout.item_leftmenu_lv, null);
+                convertView = View.inflate(mContext, R.layout.item_left, null);
             }
             TextView tv = (TextView) convertView;
             /**数据,*/
