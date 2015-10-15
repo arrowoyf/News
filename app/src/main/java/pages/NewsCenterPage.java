@@ -15,6 +15,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import domain.NewsCenterData;
 import utils.PrintLog;
+import view.LeftFragment;
 
 
 public class NewsCenterPage extends BasePage {
@@ -41,7 +42,7 @@ public class NewsCenterPage extends BasePage {
 
         /**从服务器获取数据*/
         String url = mContext.getResources().getString(R.string.newscenterurl);
-        /**1：请求 url*/
+        /**1：请求 url,从网络上获取数据*/
         getDataForNet(url);
 
 
@@ -67,7 +68,7 @@ public class NewsCenterPage extends BasePage {
                 String jsonDataStr = responseInfo.result;
                 /**3：解析 json 数据*/
                 newsCenterData = parseJsonData(jsonDataStr);
-                /**4：处理事件*/
+                /**4：处理数据*/
                 processData(newsCenterData);
             }
 
@@ -88,8 +89,14 @@ public class NewsCenterPage extends BasePage {
 
         PrintLog.showLog(newsCenterData.getData().get(0).getChildren().get(0).getTitle());
 
-        /**设置左侧菜单数据*/
-
+        /**3：设置左侧菜单数据
+         *  获取菜单数据的 api 已被暴露，
+         *  目的：只需获取 leftfragment 即可
+         *  NewsCenter 想要获取到 LeftFragment 通过 HomeActivity
+         */
+        /**获取*/
+        LeftFragment leftFragment = mContext.getLeftFragment();
+        leftFragment.setLeftMenuData(newsCenterData.getData());
         /**设置四个新闻界面*/
 
         /**显示数据*/
@@ -104,7 +111,7 @@ public class NewsCenterPage extends BasePage {
      */
     private NewsCenterData parseJsonData(String jsonDataStr) {
         Gson gson = new Gson();
-        /**1,创建 class*/
+        /**1,创建 class，根据 Bean 解析数据*/
         NewsCenterData newsCenterData = gson.fromJson(jsonDataStr, NewsCenterData.class);
 
         return newsCenterData;
