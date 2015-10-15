@@ -64,7 +64,7 @@ public class HomeActivity extends SlidingFragmentActivity {
         SlidingMenu slidingMenu = getSlidingMenu();
 
         /**左侧菜单显示完全后剩余的宽度*/
-        slidingMenu.setBehindOffset(200);
+        slidingMenu.setBehindOffset(450);
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
         /**.setMode(SlidingMenu.LEFT_RIGHT);*/
