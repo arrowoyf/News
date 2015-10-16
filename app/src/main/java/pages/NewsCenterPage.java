@@ -1,7 +1,6 @@
 package pages;
 
-import android.view.Gravity;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.miss.news.HomeActivity;
@@ -13,12 +12,27 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import domain.NewsCenterData;
+import newscenterpages.BaseNewsCenterPage;
+import newscenterpages.InterectPage_NewsCenter;
+import newscenterpages.NewsPage_NewsCenter;
+import newscenterpages.PhotoPage_NewsCenter;
+import newscenterpages.TopicPage_NewsCenter;
 import utils.PrintLog;
 import view.LeftFragment;
 
 
 public class NewsCenterPage extends BasePage {
+
+    /**
+     * 新闻中心，显示 4 个页面
+     * 设置一个容器类
+     */
+    private List<BaseNewsCenterPage> mBaseNewsCenterPages = new ArrayList<>();
+
 
     private NewsCenterData newsCenterData;
 
@@ -27,32 +41,33 @@ public class NewsCenterPage extends BasePage {
     }
 
 
-
-    /**设置显示新闻条目对应的uemian
+    /**
+     * 设置显示新闻条目对应的uemian
+     *
      * @param pageIndex 新闻 专题 。。。
-     * 关联：点击事件
+     *                  关联：点击事件
      */
     @Override
     public void selectPage(int pageIndex) {
         /***/
-        PrintLog.showLog("页面"+pageIndex+"的显示");
+        PrintLog.showLog("页面" + pageIndex + "的显示");
+
+        changPage(pageIndex);
 
     }
 
+    /**
+     * 页面的切换
+     *
+     * @param pageIndex 索引值
+     */
+    private void changPage(int pageIndex) {
+        viewDatas(pageIndex);
+    }
 
 
     @Override
     public void initData() {
-        tv_title.setText("新闻中心");
-
-        // 内容
-        TextView tv = new TextView(mContext);
-        tv.setText("新闻中心的内容");
-        tv.setTextSize(30);
-        tv.setGravity(Gravity.CENTER);
-
-        // 添加到内容中frameLayout
-        fl_content.addView(tv);
 
 
         /**从服务器获取数据*/
@@ -103,7 +118,85 @@ public class NewsCenterPage extends BasePage {
     private void processData(NewsCenterData newsCenterData) {
 
         PrintLog.showLog(newsCenterData.getData().get(0).getChildren().get(0).getTitle());
+        /**3：设置左侧菜单数据
+         */
+        setLeftMenuData(newsCenterData);
 
+
+        /**设置四个新闻界面,新闻 专题 组图 互动
+         * 1，按顺序，暴露的接口有顺序
+         * 2，左侧菜单 ListView 显示数据和  domain 数据保持一致
+         */
+        initNewsPages(newsCenterData);
+
+        /**显示数据*/
+        viewDatas(0);
+
+
+    }
+
+    /**
+     * @param index 获取要显示数据的位置
+     */
+    private void viewDatas(int index) {
+        tv_title.setText(newsCenterData.getData().get(index).getTitle());
+
+        /**内容加载帧布局中，加载之前，先清空*/
+        fl_content.removeAllViews();
+
+        /**获取当前显示的 View*/
+        View v = mBaseNewsCenterPages.get(index).getRootView();
+        PrintLog.showLog("v 0= "+mBaseNewsCenterPages);
+        PrintLog.showLog("v 1= "+mBaseNewsCenterPages.get(index));
+        PrintLog.showLog("v 2 = "+mBaseNewsCenterPages.get(index).getRootView());
+
+
+        /**添加到内容 Fragment*/
+        fl_content.addView(v);
+
+
+    }
+
+    /**
+     * 创建 4 个页面
+     *
+     * @param newsCenterData
+     */
+    private void  initNewsPages(NewsCenterData newsCenterData) {
+        /**取数据*/
+        for (NewsCenterData.DataEntity data : newsCenterData.getData()) {
+            /**迭代 数据内容,根据 type 的值，保持有序性*/
+            int type = data.getType();
+            switch (type) {
+                case 1:
+                    /**新闻*/
+                    mBaseNewsCenterPages.add(new NewsPage_NewsCenter(mContext));
+
+                    break;
+                case 10:
+                    /**专题*/
+                    mBaseNewsCenterPages.add(new TopicPage_NewsCenter(mContext));
+
+                    break;
+                case 2:
+                    /**组图*/
+                    mBaseNewsCenterPages.add(new PhotoPage_NewsCenter(mContext));
+
+                    break;
+                case 3:
+                    /**互动*/
+                    mBaseNewsCenterPages.add(new InterectPage_NewsCenter(mContext));
+
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
+
+
+    private void setLeftMenuData(NewsCenterData newsCenterData) {
         /**3：设置左侧菜单数据
          *  获取菜单数据的 api 已被暴露，
          *  目的：只需获取 leftfragment 即可
@@ -116,16 +209,13 @@ public class NewsCenterPage extends BasePage {
         leftFragment.setOnLeftMenuPageChangeListener(new LeftFragment.OnLeftMenuPageChangeListener() {
             @Override
             public void selectPage(int selectIndex) {
-                PrintLog.showLog("桥：页面"+selectIndex+"的显示");
+                PrintLog.showLog("桥：页面" + selectIndex + "的显示");
+
+                changPage(selectIndex);
+
 
             }
         });
-
-        /**设置四个新闻界面*/
-
-        /**显示数据*/
-
-
     }
 
     /**
